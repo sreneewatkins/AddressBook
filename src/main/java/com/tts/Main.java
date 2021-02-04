@@ -9,14 +9,11 @@ import java.util.Scanner;
 public class Main {
 
     private static final Scanner readInput = new Scanner(System.in);
-    private static boolean quitThisBook = false;
     private static boolean quitAllBooks = false;
     private static AddressBook currentBook;
     private static ArrayList<AddressBook> bookArrayList = new ArrayList<>();
 
     public static void main(String[] args) {
-
-        //present user with options and take input
 
         do{
             beginUserCommunication();
@@ -43,8 +40,7 @@ public class Main {
 
             currentBook = new AddressBook(nickName);
             bookArrayList.add(currentBook);
-            System.out.println(currentBook.getBookName() + " CREATED");
-            //System.out.println();
+            System.out.println(currentBook.getBookName() + " CREATED\n");
         } else {
             System.exit(0);
         }
@@ -52,6 +48,7 @@ public class Main {
 
     public static void getUserOptions() {
 
+        boolean quitThisBook;
         do {
             quitThisBook = false;
             System.out.println("""
@@ -83,12 +80,12 @@ public class Main {
                         currentBook.quit();
                     }
                     default -> {
-                        System.out.println("You must enter a value between 1 and 6");
+                        System.out.println("***You must enter a value between 1 and 6");
                         pressEnterToCont();
                     }
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Invalid Entry: must enter a number");
+                System.out.println("Invalid Entry: You must enter a number");
                 System.out.println(e);
                 quitThisBook = true;
             }
@@ -98,10 +95,6 @@ public class Main {
 
     public static boolean checkContinue(String userAnswer) {
         //TODO: insert ternary operation OR switch case to return boolean
-        //This method is probably overkill. just wanted to test my ability to exe a switch
-        //change method to return String and uncomment all of the msg's for testing purposes
-        //above testing comment goes with the old switch located in src/notes.txt
-        System.out.println("user answer: " + userAnswer);
         boolean flag;
         char shortAnswer = userAnswer.charAt(0);
 
@@ -119,7 +112,7 @@ public class Main {
     }//end checkAnswer()
 
     private static void pressEnterToCont() {
-        System.out.println("\n**Press enter to continue");
+        System.out.println("\nPress enter to continue");
         try{
             System.in.read();
         }

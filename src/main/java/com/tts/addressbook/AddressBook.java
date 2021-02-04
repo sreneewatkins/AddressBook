@@ -1,9 +1,6 @@
 package com.tts.addressbook;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class AddressBook {
@@ -27,7 +24,6 @@ public class AddressBook {
     }
 
     //methods
-    //TODO: make sure email address is unique
     public void addEntry() {
         System.out.printf("Let's add an entry to %s\n\n", this.bookName);
         System.out.println("Please enter the contact's first name: ");
@@ -37,12 +33,20 @@ public class AddressBook {
         System.out.println("Please enter the contact's phone number: ");
         String thePhoneNum = addressBookScanner.nextLine();
 
-        boolean alreadyInContacts;
+        boolean alreadyInContacts, goodEmail;
         String theEmail;
+        String EMAIL_REGEX = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+
         do {
             System.out.println("Please enter the contact's email address: ");
             theEmail = addressBookScanner.nextLine().toLowerCase();
             alreadyInContacts = false;
+            goodEmail = theEmail.matches(EMAIL_REGEX);
+
+            if (!goodEmail) {
+                System.out.println("Incorrect email format");
+                continue;
+            }
             for (Entry entry : entries) {
                 if (theEmail.equals(entry.getEmailAddress().toLowerCase())) {
                     System.out.println("This email is already taken. Please try again.");
@@ -50,26 +54,29 @@ public class AddressBook {
                     break;
                 }
             }
-        } while (alreadyInContacts);
+        } while (alreadyInContacts || !goodEmail);
 
         Entry newEntry = new Entry(theFirstName, theLastname, thePhoneNum, theEmail);
         entries.add(newEntry);
-        System.out.printf("New Contact entered into %s:\n%s\n\n", this.bookName, newEntry);
+        System.out.printf("New Contact entered into %s:\n%s\n", this.bookName, newEntry);
     }//end addEntry()
 
     public void removeEntry() {
-        //TODO: don't print contact removed if contact not found
         System.out.printf("Let's remove an entry from %s\n\n", this.bookName);
         System.out.println("Enter the email address of the contact to delete");
         String toRemove = addressBookScanner.nextLine().toLowerCase();
+        boolean found = false;
+        for (Entry entry : entries) {
+            if (toRemove.equals(entry.getEmailAddress().toLowerCase())) {
+                System.out.println("Contact removed");
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            System.out.printf("Contact NOT found in %s\n", this.bookName);
+        }
         entries.removeIf(currentEntry -> currentEntry.getEmailAddress().equalsIgnoreCase(toRemove));
-        System.out.println("Contact removed\n");
-//        while (itr.hasNext()) {
-//            Entry currentEntry = itr.next();
-//            if (currentEntry.getEmailAddress().equalsIgnoreCase(toRemove)) {
-//                itr.remove();
-//            }
-//        }
     }//end removeEntry()
 
     public void searchForEntry() {
@@ -146,19 +153,16 @@ public class AddressBook {
     public void deleteAddressBook() {
         //or instead of passing string which relies on user mem
         //display list of books and ask them to choose
-        System.out.printf("Let's delete %s\n\n", this.bookName);
+        System.out.printf("DELETING %s\n", this.bookName);
         for(int i = entries.size() - 1; i >= 0; i--) {
             entries.remove(i);
         }
-        System.out.println(this.bookName + " DELETED");
+        System.out.println(this.bookName + " DELETED\n");
     }//end deleteAddressBook()
 
     public void quit() {
         System.out.printf("Quitting %s", this.bookName);
     }
-    //able to access entries through getters and setters
-    //the address book should contain an ArrayList of Entry instances
-
 
     @Override
     public String toString() {
