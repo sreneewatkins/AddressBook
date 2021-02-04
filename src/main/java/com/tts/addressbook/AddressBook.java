@@ -25,6 +25,7 @@ public class AddressBook {
 
     //methods
     public void addEntry() {
+        //TODO: validate phone number format
         System.out.printf("Let's add an entry to %s\n\n", this.bookName);
         System.out.println("Please enter the contact's first name: ");
         String theFirstName = addressBookScanner.nextLine();
